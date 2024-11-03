@@ -1,6 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-
+import './Registro.css'
 
 function Registro () {
     const initialValues = {
@@ -8,6 +8,8 @@ function Registro () {
         email: '',
         password: '',
         confirmPassword: '',
+        phone:'',
+        gender: '',
     };
 
     const validationSchema = Yup.object({
@@ -17,40 +19,63 @@ function Registro () {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir')
             .required('La confirmacion de la contraseña es obligatoria'),
-    });
+        phone: Yup.string()
+            .matches(/^\d+$/, 'El numero de telefono debe contener solo digitos')
+            .min(10, 'El numero de telefono debe tener al menos 10 digitos')
+            .required('El numero de telefono es obligatoria'),     
+        gender: Yup.string().required('El genero es obligatorio'),
+        });
 
     const onSubmit = (values, { setSubmitting }) => {
         console.log('Formulario enviado', values);
         alert('Resgistro exitoso');
         setSubmitting(false); 
-    };
+    }
+        
 
 
     return (
         <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
             {({ isSubmitting }) => (
-                <Form>
-                    <div>
+                <Form className='form-container'>
+                    <div className='form-group'>
                         <label htmlFor="username">Nombre de usuario</label>
                         <Field type="text" id="username" name="username" />
-                        <ErrorMessage name='username' component="div" />
+                        <ErrorMessage name="username" component="div" className="error-message" />
                     </div>
-                    <div>
-                        <label htmlFor="email">Correo electrónico</label>
+                    <div className='form-group'>
+                        <label htmlFor="email">Correo electronico</label>
                         <Field type="email" id="email" name="email" />
-                        <ErrorMessage name='email' component="div" />
+                        <ErrorMessage name="email" component="div" className="error-message" />
                     </div>
-                    <div>
-                        <label htmlFor="password">Contraseña</label>
+                    <div className='form-group'>
+                        <label htmlFor="phone">Numero de telefono</label>
+                        <Field type="text" id="phone" name="phone" />
+                        <ErrorMessage name="phone" component="div" className="error-message" />
+                    </div>
+                    <div className='form-radio-group'>
+                        <label >
+                            <Field type="radio" name="gender" value="male" />
+                            Masculino
+                        </label>
+                        <label >
+                            <Field type="radio" name="gender" value="female" />
+                            Femenino
+                        </label>
+                        <ErrorMessage name='gender' component="div" className='error-message' />
+                    </div>
+                    <div className='form-group'>
+                        <label htmlFor='password'>Contraseña</label>
                         <Field type="password" id="password" name="password" />
-                        <ErrorMessage name='password' component="div" />
+                        <ErrorMessage name='password' component="div" className='error-message' />
                     </div>
-                    <div>
-                        <label htmlFor="confirmPassword">Confirmar contraseña</label>
+                    <div className='form-group'>
+                        <label htmlFor='confirmPassword'>Confirmar contraseña</label>
                         <Field type="password" id="confirmPassword" name="confirmPassword" />
-                        <ErrorMessage name='confirmPassword' component="div" />
+                        <ErrorMessage name='confirmPassword' component="div" className='error-message' />
                     </div>
-                    <button type='submit' disabled={isSubmitting}>
+                    
+                    <button type='submit' className="submit-button" disabled={isSubmitting}>
                         Registrar
                     </button>
                 </Form>
